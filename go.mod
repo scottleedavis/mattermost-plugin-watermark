@@ -1,4 +1,4 @@
-module github.com/mattermost/mattermost-plugin-starter-template
+module github.com/scottleedavis/mattermost-plugin-watermark
 
 go 1.12
 
@@ -12,7 +12,6 @@ require (
 	github.com/mattermost/mattermost-server v5.12.0+incompatible
 	github.com/pelletier/go-toml v1.4.0 // indirect
 	github.com/pkg/errors v0.8.1
-	github.com/stretchr/testify v1.3.0
 	gopkg.in/auyer/steganography.v2 v2.0.0-20190427051610-2664780d40a3
 )
 
