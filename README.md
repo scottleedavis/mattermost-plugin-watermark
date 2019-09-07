@@ -22,5 +22,5 @@ make
 This will produce a single plugin file (with support for multiple architectures) for upload to your Mattermost server:
 
 ```
-dist/com.example.my-plugin.tar.gz
+dist/com.github.scottleedavis.mattermost-plugin-watermark.tar.gz
 ```
