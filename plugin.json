@@ -11,12 +11,16 @@
             "windows-amd64": "server/dist/plugin-windows-amd64.exe"
         }
     },
-    "webapp": {
-        "bundle_path": "webapp/dist/main.js"
-    },
     "settings_schema": {
         "header": "",
         "footer": "",
-        "settings": []
+        "settings": [{
+            "key": "WaterMark",
+            "display_name": "Watermark Text",
+            "type": "text",
+            "help_text": "The text that will be added to uploaded images.",
+            "placeholder": "This is an image that has been uploaded to Mattermost",
+            "default": "This is an image that has been uploaded to Mattermost"
+        }]
     }
 }
