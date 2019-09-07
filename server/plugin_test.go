@@ -58,7 +58,7 @@ func TestFileWillBeUpload(t *testing.T) {
 		assert.Nil(t, err)
 
 		fi := &model.FileInfo{
-			Extension: "JPG",
+			Extension: "PNG",
 		}
 
 		r := bytes.NewReader(data)
@@ -68,13 +68,13 @@ func TestFileWillBeUpload(t *testing.T) {
 
 		_, reason := p.FileWillBeUploaded(nil, fi, r, w)
 		assert.Equal(t, reason, "")
+		fmt.Println(reason)
 
 		img, _, err := image.Decode(bytes.NewReader(buf.Bytes())) // decoding to golang's image.Image
 		assert.Nil(t, err)
 		sizeOfMessage := steganography.GetMessageSizeFromImage(img) // retrieving message size to decode in the next line
 
 		msg := steganography.Decode(sizeOfMessage, img)
-		fmt.Printf("%v\n", msg)
 		assert.Equal(t, string(msg), "This is an image that has been uploaded to Mattermost")
 
 	})
@@ -83,4 +83,3 @@ func TestFileWillBeUpload(t *testing.T) {
 	//
 	//})
 }
-

@@ -17,15 +17,12 @@ import (
 type Plugin struct {
 	plugin.MattermostPlugin
 
-	// configurationLock synchronizes access to the configuration.
 	configurationLock sync.RWMutex
 
-	// configuration is the active plugin configuration. Consult getConfiguration and
-	// setConfiguration for usage.
 	configuration *configuration
 }
 
-// FileWillBeUploaded comment
+//FileWillBeUploaded hook
 func (p *Plugin) FileWillBeUploaded(c *plugin.Context, info *model.FileInfo, file io.Reader, output io.Writer) (*model.FileInfo, string) {
 
 	switch strings.ToUpper(info.Extension) {
@@ -50,15 +47,15 @@ func (p *Plugin) FileWillBeUploaded(c *plugin.Context, info *model.FileInfo, fil
 			p.API.LogError(err.Error())
 			return nil, err.Error()
 		}
-		//img, _, err = image.Decode(bufio.NewReader(w)) // decoding to golang's image.Image
+		//img, _, err = image.Decode(bufio.NewReader(w))
 		//if err != nil {
 		//	p.API.LogError(err.Error())
 		//	return nil, err.Error()
 		//}
-		//sizeOfMessage := steganography.GetMessageSizeFromImage(img) // retrieving message size to decode in the next line
+		//sizeOfMessage := steganography.GetMessageSizeFromImage(img)
 		//msg := steganography.Decode(sizeOfMessage, img)
-		//if string(msg) != "This is an image that has been uploaded to Mattermost" {
-		//	return nil, "No watermark"
+		//if string(msg) == "" {
+		//	return nil, "Watermark was not set."
 		//}
 		if _, err := output.Write(w.Bytes()); err != nil {
 			p.API.LogError(err.Error())
