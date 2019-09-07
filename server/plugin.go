@@ -1,14 +1,19 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
+	"bytes"
+	"image"
+	"io"
+	"io/ioutil"
+	"strings"
 	"sync"
 
+	"github.com/mattermost/mattermost-server/model"
 	"github.com/mattermost/mattermost-server/plugin"
+	"gopkg.in/auyer/steganography.v2"
 )
 
-// Plugin implements the interface expected by the Mattermost server to communicate between the server and plugin processes.
+// Plugin comment
 type Plugin struct {
 	plugin.MattermostPlugin
 
@@ -20,9 +25,35 @@ type Plugin struct {
 	configuration *configuration
 }
 
-// ServeHTTP demonstrates a plugin that handles HTTP requests by greeting the world.
-func (p *Plugin) ServeHTTP(c *plugin.Context, w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Hello, world!")
-}
+// FileWillBeUploaded comment
+func (p *Plugin) FileWillBeUploaded(c *plugin.Context, info *model.FileInfo, file io.Reader, output io.Writer) (*model.FileInfo, string) {
 
-// See https://developers.mattermost.com/extend/plugins/server/reference/
+	switch strings.ToUpper(info.Extension) {
+	case "JPG", "JPEG", "PNG":
+		data, err := ioutil.ReadAll(file)
+		if err != nil {
+			p.API.LogError(err.Error())
+			return nil, err.Error()
+		}
+
+		img, _, err := image.Decode(bytes.NewReader(data))
+		if err != nil {
+			errMsg := "ERROR: original image is corrupt " + err.Error()
+			p.API.LogInfo(errMsg)
+			return nil, errMsg
+		}
+
+		configuration := p.getConfiguration()
+		w := &bytes.Buffer{}
+		err = steganography.Encode(w, img, []byte(configuration.WaterMark))
+		if err != nil {
+			p.API.LogError(err.Error())
+			return nil, err.Error()
+		}
+		if _, err := output.Write(w.Bytes()); err != nil {
+			p.API.LogError(err.Error())
+		}
+
+	}
+	return nil, ""
+}
