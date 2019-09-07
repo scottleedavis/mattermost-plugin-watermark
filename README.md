@@ -1,4 +1,4 @@
-# MatterMost Plugin Watermark
+# Mattermost Plugin Watermark
 ![CircleCI branch](https://img.shields.io/circleci/project/github/scottleedavis/mattermost-plugin-watermark/master.svg)
 
 A plugin for [Mattermost](https://mattermost.com) that uses a [steganography library](https://github.com/auyer/steganography) to add a hidden string in an image that identifies an image as having been uploaded to the server.
