@@ -167,7 +167,7 @@ debug-dist: apply server webapp-debug bundle
 .PHONY: test
 test: webapp/.npminstall
 ifneq ($(HAS_SERVER),)
-	$(GO) test -v $(GO_TEST_FLAGS) ./server/...
+	$(GO) test -v $(GO_TEST_FLAGS) -coverprofile=server/coverage.txt  ./server/...
 endif
 ifneq ($(HAS_WEBAPP),)
 	cd webapp && $(NPM) run fix && $(NPM) run test;
