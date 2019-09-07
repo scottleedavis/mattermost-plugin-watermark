@@ -1,9 +1,10 @@
 # MatterMost Plugin Watermark
 ![CircleCI branch](https://img.shields.io/circleci/project/github/scottleedavis/mattermost-plugin-watermark/master.svg)
 
-A plugin for [Mattermost](https://mattermost.com) that adds a hidden string in an image file to that identifies an image as having been uploaded to the server.
+A plugin for [Mattermost](https://mattermost.com) that uses a [steganography library](https://github.com/auyer/steganography) to add a hidden string in an image that identifies an image as having been uploaded to the server.
 
-Currently supports PNG files.  Planned JPG support too.
+Currently supports PNG files.  
+Planned JPG support too.
 
 ##### Decode
 To view the encoded message/watermark in the file, run `go run decode.go`.  For example:
