@@ -1,29 +1,19 @@
-# Plugin Starter Template ![CircleCI branch](https://img.shields.io/circleci/project/github/mattermost/mattermost-plugin-starter-template/master.svg)
+# MatterMost Plugin Watermark
+![CircleCI branch](https://img.shields.io/circleci/project/github/scottleedavis/mattermost-plugin-watermark/master.svg)
 
-This plugin serves as a starting point for writing a Mattermost plugin. Feel free to base your own plugin off this repository.
+A plugin for [Mattermost](https://mattermost.com) that adds a hidden string in an image file to that identifies an image as having been uploaded to the server.
 
-To learn more about plugins, see [our plugin documentation](https://developers.mattermost.com/extend/plugins/).
+Currently supports PNG files.  Planned JPG support too.
 
-## Getting Started
-Use GitHub's template feature to make a copy of this repository by clicking the "Use this template" button then clone outside of `$GOPATH`.
-
-Alternatively shallow clone the repository to a directory outside of `$GOPATH` matching your plugin name:
-```
-git clone --depth 1 https://github.com/mattermost/mattermost-plugin-starter-template com.example.my-plugin
-```
-
-Note that this project uses [Go modules](https://github.com/golang/go/wiki/Modules). Be sure to locate the project outside of `$GOPATH`, or allow the use of Go modules within your `$GOPATH` with an `export GO111MODULE=on`.
-
-Edit `plugin.json` with your `id`, `name`, and `description`:
-```
-{
-    "id": "com.example.my-plugin",
-    "name": "My Plugin",
-    "description": "A plugin to enhance Mattermost."
-}
+##### Decode
+To view the encoded message/watermark in the file, run `go run decode.go`.  For example:
+```bash
+$ go run decode.go assets/test.png 
+This is an image that has been uploaded to Mattermost
 ```
 
-Build your plugin:
+
+##### Build
 ```
 make
 ```

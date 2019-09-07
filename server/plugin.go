@@ -50,6 +50,16 @@ func (p *Plugin) FileWillBeUploaded(c *plugin.Context, info *model.FileInfo, fil
 			p.API.LogError(err.Error())
 			return nil, err.Error()
 		}
+		//img, _, err = image.Decode(bufio.NewReader(w)) // decoding to golang's image.Image
+		//if err != nil {
+		//	p.API.LogError(err.Error())
+		//	return nil, err.Error()
+		//}
+		//sizeOfMessage := steganography.GetMessageSizeFromImage(img) // retrieving message size to decode in the next line
+		//msg := steganography.Decode(sizeOfMessage, img)
+		//if string(msg) != "This is an image that has been uploaded to Mattermost" {
+		//	return nil, "No watermark"
+		//}
 		if _, err := output.Write(w.Bytes()); err != nil {
 			p.API.LogError(err.Error())
 		}
