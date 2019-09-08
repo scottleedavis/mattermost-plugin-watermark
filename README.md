@@ -3,8 +3,7 @@
 
 A plugin for [Mattermost](https://mattermost.com) that uses a [steganography library](https://github.com/auyer/steganography) to add a hidden string in an image that identifies an image as having been uploaded to the server.
 
-Currently supports PNG files.  
-Planned JPG support too.
+Supports PNG & JPG support too.
 
 ##### Decode
 To view the encoded message/watermark in the file, run `go run decode.go`.  For example:
