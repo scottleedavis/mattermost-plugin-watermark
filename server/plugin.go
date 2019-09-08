@@ -47,16 +47,6 @@ func (p *Plugin) FileWillBeUploaded(c *plugin.Context, info *model.FileInfo, fil
 			p.API.LogError(err.Error())
 			return nil, err.Error()
 		}
-		//img, _, err = image.Decode(bufio.NewReader(w))
-		//if err != nil {
-		//	p.API.LogError(err.Error())
-		//	return nil, err.Error()
-		//}
-		//sizeOfMessage := steganography.GetMessageSizeFromImage(img)
-		//msg := steganography.Decode(sizeOfMessage, img)
-		//if string(msg) == "" {
-		//	return nil, "Watermark was not set."
-		//}
 		if _, err := output.Write(w.Bytes()); err != nil {
 			p.API.LogError(err.Error())
 		}

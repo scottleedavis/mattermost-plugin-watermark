@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"bytes"
-	"fmt"
 	"github.com/mattermost/mattermost-server/model"
 	"github.com/mattermost/mattermost-server/plugin/plugintest"
 	"github.com/stretchr/testify/assert"
@@ -41,7 +40,7 @@ func TestFileWillBeUpload(t *testing.T) {
 		assert.Equal(t, reason, "ERROR: original image is corrupt image: unknown format")
 	})
 
-	t.Run("PNG watermark", func(t *testing.T) {
+	t.Run("png watermark", func(t *testing.T) {
 
 		setupAPI := func() *plugintest.API {
 			api := &plugintest.API{}
@@ -52,6 +51,7 @@ func TestFileWillBeUpload(t *testing.T) {
 		defer api.AssertExpectations(t)
 		p := &Plugin{}
 		p.API = api
+		p.configuration = &configuration{WaterMark: "Test Watermark"}
 
 		data, err := ioutil.ReadFile("../assets/test.png")
 		assert.Nil(t, err)
@@ -67,18 +67,48 @@ func TestFileWillBeUpload(t *testing.T) {
 
 		_, reason := p.FileWillBeUploaded(nil, fi, r, w)
 		assert.Equal(t, reason, "")
-		fmt.Println(reason)
 
 		img, _, err := image.Decode(bytes.NewReader(buf.Bytes())) // decoding to golang's image.Image
 		assert.Nil(t, err)
 		sizeOfMessage := steganography.GetMessageSizeFromImage(img) // retrieving message size to decode in the next line
 
 		msg := steganography.Decode(sizeOfMessage, img)
-		assert.Equal(t, string(msg), "This is an image that has been uploaded to Mattermost")
-
+		assert.Equal(t, string(msg), "Test Watermark")
 	})
 
-	//t.Run("JPG watermark", func(t *testing.T) {
-	//
-	//})
+	t.Run("jpg watermark", func(t *testing.T) {
+
+		setupAPI := func() *plugintest.API {
+			api := &plugintest.API{}
+			return api
+		}
+
+		api := setupAPI()
+		defer api.AssertExpectations(t)
+		p := &Plugin{}
+		p.API = api
+		p.configuration = &configuration{WaterMark: "Test Watermark"}
+
+		data, err := ioutil.ReadFile("../assets/test.jpg")
+		assert.Nil(t, err)
+
+		fi := &model.FileInfo{
+			Extension: "JPG",
+		}
+
+		r := bytes.NewReader(data)
+
+		var buf bytes.Buffer
+		w := bufio.NewWriter(&buf)
+
+		_, reason := p.FileWillBeUploaded(nil, fi, r, w)
+		assert.Equal(t, reason, "")
+
+		img, _, err := image.Decode(bytes.NewReader(buf.Bytes())) // decoding to golang's image.Image
+		assert.Nil(t, err)
+		sizeOfMessage := steganography.GetMessageSizeFromImage(img) // retrieving message size to decode in the next line
+
+		msg := steganography.Decode(sizeOfMessage, img)
+		assert.Equal(t, string(msg), "Test Watermark")
+	})
 }
