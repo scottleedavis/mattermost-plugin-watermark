@@ -6,7 +6,7 @@ jobs:
     docker:
       - image: circleci/golang:1.12
 
-    working_directory: /go/src/github.com/scottleedavis/mattermost-plugin-noexif
+    working_directory: /go/src/github.com/scottleedavis/mattermost-plugin-watermark
     steps:
       - checkout
 
