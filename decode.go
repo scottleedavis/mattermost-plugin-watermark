@@ -3,12 +3,12 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"gopkg.in/auyer/steganography.v2"
 	"image"
 	"os"
+	
+	"gopkg.in/auyer/steganography.v2"
 )
 
-//Using the "image/jpeg" module to decode img, err := jpeg.Decode(reader)
 func main() {
 	inFile, err := os.Open(os.Args[1]) // opening file
 	if err != nil {
