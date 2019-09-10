@@ -3,14 +3,15 @@ package main
 import (
 	"bufio"
 	"bytes"
+	"image"
+	"io/ioutil"
+	"testing"
+
 	"github.com/mattermost/mattermost-server/model"
 	"github.com/mattermost/mattermost-server/plugin/plugintest"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"gopkg.in/auyer/steganography.v2"
-	"image"
-	"io/ioutil"
-	"testing"
 )
 
 func TestFileWillBeUpload(t *testing.T) {
