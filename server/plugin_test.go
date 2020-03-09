@@ -38,7 +38,7 @@ func TestFileWillBeUpload(t *testing.T) {
 		w := bufio.NewWriter(&buf)
 
 		fi, reason := p.FileWillBeUploaded(nil, fi, r, w)
-		assert.Equal(t, reason, "Original image is corrupt image: unknown format")
+		assert.Equal(t, reason, "Original image is corrupt: image: unknown format")
 		assert.Nil(t, fi)
 	})
 
