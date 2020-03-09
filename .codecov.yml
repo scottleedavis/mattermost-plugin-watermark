@@ -1,0 +1,3 @@
+ignore:
+  - "server/configuration.go"
+  - "server/main.go"
