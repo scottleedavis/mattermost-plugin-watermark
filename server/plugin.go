@@ -8,8 +8,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/mattermost/mattermost-server/model"
-	"github.com/mattermost/mattermost-server/plugin"
+	"github.com/mattermost/mattermost-server/v5/model"
+	"github.com/mattermost/mattermost-server/v5/plugin"
 	"gopkg.in/auyer/steganography.v2"
 )
 
@@ -23,34 +23,39 @@ type Plugin struct {
 }
 
 //FileWillBeUploaded hook
-func (p *Plugin) FileWillBeUploaded(c *plugin.Context, info *model.FileInfo, file io.Reader, output io.Writer) (*model.FileInfo, string) {
-
-	switch strings.ToUpper(info.Extension) {
-	case "JPG", "JPEG", "PNG":
+func (p *Plugin) FileWillBeUploaded(_ *plugin.Context, info *model.FileInfo, file io.Reader, output io.Writer) (*model.FileInfo, string) {
+	switch strings.ToLower(info.Extension) {
+	case "jpg", "jpeg", "png":
 		data, err := ioutil.ReadAll(file)
 		if err != nil {
-			p.API.LogError(err.Error())
-			return nil, err.Error()
+			errMsg := "Failed to read image: " + err.Error()
+			p.API.LogWarn(errMsg)
+			return nil, errMsg
 		}
 
 		img, _, err := image.Decode(bytes.NewReader(data))
 		if err != nil {
-			errMsg := "ERROR: original image is corrupt " + err.Error()
-			p.API.LogInfo(errMsg)
+			errMsg := "Original image is corrupt " + err.Error()
+			p.API.LogWarn(errMsg)
 			return nil, errMsg
 		}
 
 		configuration := p.getConfiguration()
 		w := &bytes.Buffer{}
+
 		err = steganography.Encode(w, img, []byte(configuration.WaterMark))
 		if err != nil {
-			p.API.LogError(err.Error())
-			return nil, err.Error()
-		}
-		if _, err := output.Write(w.Bytes()); err != nil {
-			p.API.LogError(err.Error())
+			errMsg := "Failed to encode watermark into image " + err.Error()
+			p.API.LogWarn(errMsg)
+			return nil, errMsg
 		}
 
+		if _, err := output.Write(w.Bytes()); err != nil {
+			errMsg := "Failed to write new image" + err.Error()
+			p.API.LogWarn(errMsg)
+			return nil, errMsg
+		}
 	}
+
 	return nil, ""
 }

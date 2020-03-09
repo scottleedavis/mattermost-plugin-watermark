@@ -7,15 +7,14 @@ import (
 	"io/ioutil"
 	"testing"
 
-	"github.com/mattermost/mattermost-server/model"
-	"github.com/mattermost/mattermost-server/plugin/plugintest"
+	"github.com/mattermost/mattermost-server/v5/model"
+	"github.com/mattermost/mattermost-server/v5/plugin/plugintest"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"gopkg.in/auyer/steganography.v2"
 )
 
 func TestFileWillBeUpload(t *testing.T) {
-
 	t.Run("original image is corrupt", func(t *testing.T) {
 		setupAPI := func() *plugintest.API {
 			api := &plugintest.API{}
@@ -24,6 +23,7 @@ func TestFileWillBeUpload(t *testing.T) {
 		}
 
 		api := setupAPI()
+		api.On("LogWarn", mock.AnythingOfType("string"))
 		defer api.AssertExpectations(t)
 		p := &Plugin{}
 		p.API = api
@@ -37,12 +37,12 @@ func TestFileWillBeUpload(t *testing.T) {
 		var buf bytes.Buffer
 		w := bufio.NewWriter(&buf)
 
-		_, reason := p.FileWillBeUploaded(nil, fi, r, w)
-		assert.Equal(t, reason, "ERROR: original image is corrupt image: unknown format")
+		fi, reason := p.FileWillBeUploaded(nil, fi, r, w)
+		assert.Equal(t, reason, "Original image is corrupt image: unknown format")
+		assert.Nil(t, fi)
 	})
 
 	t.Run("png watermark", func(t *testing.T) {
-
 		setupAPI := func() *plugintest.API {
 			api := &plugintest.API{}
 			return api
@@ -66,8 +66,9 @@ func TestFileWillBeUpload(t *testing.T) {
 		var buf bytes.Buffer
 		w := bufio.NewWriter(&buf)
 
-		_, reason := p.FileWillBeUploaded(nil, fi, r, w)
+		fi, reason := p.FileWillBeUploaded(nil, fi, r, w)
 		assert.Equal(t, reason, "")
+		assert.Nil(t, fi)
 
 		img, _, err := image.Decode(bytes.NewReader(buf.Bytes())) // decoding to golang's image.Image
 		assert.Nil(t, err)
@@ -78,7 +79,6 @@ func TestFileWillBeUpload(t *testing.T) {
 	})
 
 	t.Run("jpg watermark", func(t *testing.T) {
-
 		setupAPI := func() *plugintest.API {
 			api := &plugintest.API{}
 			return api
@@ -102,8 +102,9 @@ func TestFileWillBeUpload(t *testing.T) {
 		var buf bytes.Buffer
 		w := bufio.NewWriter(&buf)
 
-		_, reason := p.FileWillBeUploaded(nil, fi, r, w)
+		fi, reason := p.FileWillBeUploaded(nil, fi, r, w)
 		assert.Equal(t, reason, "")
+		assert.Nil(t, fi)
 
 		img, _, err := image.Decode(bytes.NewReader(buf.Bytes())) // decoding to golang's image.Image
 		assert.Nil(t, err)
