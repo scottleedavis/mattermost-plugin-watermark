@@ -35,7 +35,7 @@ func (p *Plugin) FileWillBeUploaded(_ *plugin.Context, info *model.FileInfo, fil
 
 		img, _, err := image.Decode(bytes.NewReader(data))
 		if err != nil {
-			errMsg := "Original image is corrupt " + err.Error()
+			errMsg := "Original image is corrupt: " + err.Error()
 			p.API.LogWarn(errMsg)
 			return nil, errMsg
 		}
@@ -45,13 +45,13 @@ func (p *Plugin) FileWillBeUploaded(_ *plugin.Context, info *model.FileInfo, fil
 
 		err = steganography.Encode(w, img, []byte(configuration.WaterMark))
 		if err != nil {
-			errMsg := "Failed to encode watermark into image " + err.Error()
+			errMsg := "Failed to encode watermark into image: " + err.Error()
 			p.API.LogWarn(errMsg)
 			return nil, errMsg
 		}
 
 		if _, err := output.Write(w.Bytes()); err != nil {
-			errMsg := "Failed to write new image" + err.Error()
+			errMsg := "Failed to write new image: " + err.Error()
 			p.API.LogWarn(errMsg)
 			return nil, errMsg
 		}
